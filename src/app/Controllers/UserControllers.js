@@ -4,6 +4,17 @@ const User = require('../models/User');
 const AmGrupo = require('../models/AmGrupo');
 const UserGrupo = require('../models/UserGrupo');
 
+async function  _login(res, user){
+            
+    if (user){
+        const token = await jwt.sign({ id: user.id }, process.env.SECRET, {
+            expiresIn: 10000 
+        });
+        return res.json({id:user.id, token: token}); 
+    }
+    return res.status(404).send({ message: "não autorizado" });
+}
+
 class UserController {
     async store(req, res){
        
@@ -56,21 +67,24 @@ class UserController {
 
     async login(req, res){
         try{
-            const users = await User.scope('withoutPassword')
+            const users = await User
                 .findAll({
                     where: {
                         user_name: req.body.user_name,
                         password: req.body.password
                     }
                   });
-            if (users){
-                const user = users[0];
-                const token = await jwt.sign({ id: user.id }, process.env.SECRET, {
-                    expiresIn: 10000 
-                });
-                return res.json({id:user.id, token: token}); 
-            }
-            return res.status(404).send({ message: "não autorizado" });
+            return await _login(res, (users ? users[0]: null));
+        }catch(err){
+            return res.status(500).send({ error: err.message, stack: err.stack });
+        }
+    }
+
+    async refresh(req, res){
+       
+        try{            
+            const user = await User.findByPk(req.userId);
+            return await _login(res, user);
         }catch(err){
             res.status(500).send({ error: err });
         }
