@@ -1,4 +1,6 @@
 require("dotenv-safe").config();
+const path = require('path');
+
 const jwt = require('jsonwebtoken');
 
 const express = require('express');
@@ -19,5 +21,8 @@ app.use(function(req, res, next) {
   });
 
 app.use(routes);
-
+app.use(
+  "/files", 
+  express.static(path.resolve(__dirname, "..", "tmp", "uploads"))
+);
 app.listen(3636);

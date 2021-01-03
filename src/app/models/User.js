@@ -38,7 +38,15 @@ class User extends Sequelize.Model {
                     len: [5,40],  
                 }
             },  
-            wishlist: Sequelize.STRING
+            wishlist: Sequelize.STRING,
+            picture_avatar_id: {
+              type: Sequelize.INTEGER, 
+              allowNull: true,
+              references: {
+                model: 'AppPicture',  
+                key: 'id' 
+              }
+            },
         }, {
             sequelize,
             scopes: {

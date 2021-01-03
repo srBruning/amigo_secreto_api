@@ -1,12 +1,12 @@
 const jwt = require('jsonwebtoken');
 const Router  = require('express');
-
+const multer = require('multer');
 const routes = new Router();
 
 const UserControllers = require('./app/Controllers/UserControllers');
 const GroupControllers = require('./app/Controllers/GroupControllers'); 
 const UserGroupControllers = require('./app/Controllers/UserGroupControllers'); 
-
+const multerConfig = require('./config/multer');
  
 function verifyJWT(req, res, next){
     const token = req.headers['x-access-token'];
@@ -23,12 +23,17 @@ function verifyJWT(req, res, next){
 }
 
 
-routes.post('/user', UserControllers.store);
-routes.post('/singin',  UserControllers.login);
-routes.get('/users',verifyJWT,  UserControllers.index);
-routes.get('/users/perfil', verifyJWT,  UserControllers.show);
-routes.get('/users/:id', verifyJWT,  UserControllers.show);
-routes.get('/auth/refresh', verifyJWT,  UserControllers.refresh);
+routes.post('/api/user/avatar', verifyJWT, multer(multerConfig).single('file'), (req, res) => {
+  console.log(req.file);
+  UserControllers.updateAvatar(req, res);
+});
+
+routes.post('/api/user', UserControllers.store);
+routes.post('/api/singin',  UserControllers.login);
+routes.get('/api/users',verifyJWT,  UserControllers.index);
+routes.get('/api/users/show', verifyJWT,  UserControllers.show);
+routes.get('/api/users/:id', verifyJWT,  UserControllers.show);
+routes.get('/api/auth/refresh', verifyJWT,  UserControllers.refresh);
 
 routes.post('/groups', verifyJWT, GroupControllers.store);
 routes.get('/groups',verifyJWT,  GroupControllers.index);

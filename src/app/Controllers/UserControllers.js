@@ -3,6 +3,8 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const AmGrupo = require('../models/AmGrupo');
 const UserGrupo = require('../models/UserGrupo');
+const AppPicture = require('../models/AppPicture');
+const pictureService = require('../services/PictureSevice');
 
 async function  _login(res, user){
             
@@ -19,9 +21,14 @@ class UserController {
     async store(req, res){
        
         try{
+            const _user = req.body;
+            if(!_user.password || _user.password.length < 5) {
+                return res.status(400).send({ error: "the password must contain at least 5 characters" });
+            }
+            
             const user = await User.create(req.body);
             const token = await jwt.sign({ id: user.id }, process.env.SECRET, {
-                expiresIn: 10000 // expires in 5min
+                expiresIn: 10000
             });
             user.password = undefined;
             return res.json({id:user.id, token: token}); 
@@ -57,9 +64,49 @@ class UserController {
                             model: modelUserGrup, as: "grupos",
                             include:[{model: AmGrupo, as: "grupo"},
                                      {model: User.scope('withoutPassword'), as: "friend"}]
-                        } ]
+                        },{model: AppPicture, as: "picture_avatar"} ]
                     });
             return res.json(users); 
+        }catch(err){
+            res.status(500).send({ error: err.message, stack: err.stack });
+        }
+    }
+
+    async updateAvatar(req, res){
+        try{
+            
+            if(!req.file.Location){
+                if(req.file.xs){
+                    req.file.Key = req.file.key
+                    req.file.Location = req.file.xs.Location
+                }else
+                    req.file.Location = `${process.env.APP_URL}/files/${req.file.Key}`;
+            }
+            
+            const user = await User.findByPk(req.userId, {include: {model: AppPicture, as: "picture_avatar"} });
+
+            const current_picture_avatar  = user.picture_avatar ;
+
+            user.picture_avatar = await AppPicture.create({
+                url:req.file.Location,
+                key: req.file.Key,
+                original_name: req.file.originalname
+              } );
+            user.picture_avatar_id = user.picture_avatar.id;
+            user.save();
+
+            if(current_picture_avatar)
+                try {
+                    pictureService.deletePicture(current_picture_avatar);                
+                } catch (error) {
+                    console.log("Erro ao deletar imagem antiga", error);
+                }            try {
+                    pictureService.deletePicture(current_picture_avatar);                
+                } catch (error) {
+                    console.log("Erro ao deletar imagem antiga", error);
+                }
+
+            return res.json({id: user.id, picture_avatar: user.picture_avatar}); 
         }catch(err){
             res.status(500).send({ error: err.message, stack: err.stack });
         }
