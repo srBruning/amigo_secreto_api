@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const Router  = require('express');
 const multer = require('multer');
+const path = require('path');
 const routes = new Router();
 
 const UserControllers = require('./app/Controllers/UserControllers');
@@ -35,18 +36,22 @@ routes.get('/api/users/show', verifyJWT,  UserControllers.show);
 routes.get('/api/users/:id', verifyJWT,  UserControllers.show);
 routes.get('/api/auth/refresh', verifyJWT,  UserControllers.refresh);
 
-routes.post('/groups', verifyJWT, GroupControllers.store);
-routes.get('/groups',verifyJWT,  GroupControllers.index);
-routes.get('/groups/:id',verifyJWT,  GroupControllers.show);
+routes.post('/api/groups', verifyJWT, GroupControllers.store);
+routes.get('/api/groups',verifyJWT,  GroupControllers.index);
+routes.get('/api/groups/:id',verifyJWT,  GroupControllers.show);
 
-routes.post('/user_group', verifyJWT, UserGroupControllers.store);
-routes.get('/user_group',verifyJWT,  UserGroupControllers.index);
-routes.get('/user_group/:grupo_id',verifyJWT,  UserGroupControllers.byGrupId);
-routes.get('/draw/:grupo_id',verifyJWT,  UserGroupControllers.draw);
+routes.post('/api/user_group', verifyJWT, UserGroupControllers.store);
+routes.get('/api/user_group',verifyJWT,  UserGroupControllers.index);
+routes.get('/api/user_group/:grupo_id',verifyJWT,  UserGroupControllers.byGrupId);
+routes.get('/api/draw/:grupo_id',verifyJWT,  UserGroupControllers.draw);
 
 
-routes.get('/', verifyJWT, (req, res) => {
+routes.get('/api/', verifyJWT, (req, res) => {
   res.json({message: "hello word "+req.userId});
+});
+
+routes.get('/', (req, res) => {
+  res.sendFile(path.resolve(__dirname, "app", "index.html"));
 });
 
 

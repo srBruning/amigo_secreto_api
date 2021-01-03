@@ -1,17 +1,18 @@
 require("dotenv-safe").config();
 const path = require('path');
-
+const cors = require('cors')
 const jwt = require('jsonwebtoken');
 
 const express = require('express');
-
 const app = express();
-
 require('./app/database');
-
 const routes = require('./routes');
 
+
 app.use(express.json());
+app.use(cors());
+app.options('/api/*', cors()) // include before other routes
+
 
 app.use(function(req, res, next) {
     res.setHeader('Access-Control-Allow-Origin', '*');
