@@ -100,11 +100,7 @@ class UserController {
                     pictureService.deletePicture(current_picture_avatar);                
                 } catch (error) {
                     console.log("Erro ao deletar imagem antiga", error);
-                }            try {
-                    pictureService.deletePicture(current_picture_avatar);                
-                } catch (error) {
-                    console.log("Erro ao deletar imagem antiga", error);
-                }
+                } 
 
             return res.json({id: user.id, picture_avatar: user.picture_avatar}); 
         }catch(err){
