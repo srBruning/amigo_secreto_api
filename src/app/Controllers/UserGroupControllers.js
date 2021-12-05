@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 const UserGrupo = require("../models/UserGrupo");
 const User = require("../models/User");
 const AmGrupo = require("../models/AmGrupo");
+const AppPicture = require("../models/AppPicture");
 
 class UserGroupController {
   async store(req, res) {
@@ -83,9 +84,20 @@ class UserGroupController {
           "friend",
           {
             model: AmGrupo,
-            as: "grupo",include:[{
-                model: UserGrupo.scope('withoutFriend'), as: "membros", include: [{model: User.scope('withoutPassword'), as: "user"}]
-            } ]
+            as: "grupo",
+            include: [
+              {
+                model: UserGrupo.scope("withoutFriend"),
+                as: "membros",
+                include: [
+                  {
+                    model: User.scope("withoutPassword"),
+                    as: "user",
+                    include: { model: AppPicture, as: "picture_avatar" },
+                  },
+                ],
+              },
+            ],
           },
         ],
       });
