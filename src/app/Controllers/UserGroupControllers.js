@@ -101,7 +101,10 @@ class UserGroupController {
           },
         ],
       });
-      return res.json(user_grupo);
+      if (user_grupo == undefined || user_grupo.length == 0) {
+        return null;
+      }
+      return res.json(user_grupo[0]);
     } catch (err) {
       res
         .status(500)
