@@ -3,11 +3,26 @@ const jwt = require('jsonwebtoken');
 const AmGrupo = require('../models/AmGrupo');
 const UserGrupo = require('../models/UserGrupo');
 
-
+const makeKey = (length)=> {
+    var result           = '';
+    var characters       = 'abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    var charactersLength = characters.length;
+    let digito = 0;
+    for ( var i = 0; i < length; i++ ) {
+       let idx = Math.floor(Math.random() * charactersLength);
+       result += characters.charAt(idx);
+       digito = (length-i)*idx;
+    }
+    while(digito>9)
+        digito = digito%length;
+    return result+digito;
+}
 class GroupController {
+    
     async store(req, res){
        
         try{ 
+            req.body.chave= makeKey(6);
             const groupo = await AmGrupo.create(req.body);
             return res.json(groupo); 
         }catch(err){
