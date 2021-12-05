@@ -24,6 +24,10 @@ class GroupController {
         try{ 
             req.body.chave= makeKey(6);
             const groupo = await AmGrupo.create(req.body);
+            
+            let user_grup = { grupo_id: groupo.id, user_id: req.userId };
+            const response = await UserGrupo.create(user_grup);
+
             return res.json(groupo); 
         }catch(err){
             if(err.name === 'SequelizeUniqueConstraintError')
