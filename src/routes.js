@@ -40,7 +40,7 @@ routes.post('/api/groups', verifyJWT, GroupControllers.store);
 routes.get('/api/groups',verifyJWT,  GroupControllers.index);
 routes.get('/api/groups/:id',verifyJWT,  GroupControllers.show);
 
-routes.post('/api/user_group', verifyJWT, UserGroupControllers.store);
+routes.post('/api/user_group/:key', verifyJWT, UserGroupControllers.store);
 routes.get('/api/user_group',verifyJWT,  UserGroupControllers.index);
 routes.get('/api/user_group/:grupo_id',verifyJWT,  UserGroupControllers.byGrupId);
 routes.get('/api/draw/:grupo_id',verifyJWT,  UserGroupControllers.draw);
