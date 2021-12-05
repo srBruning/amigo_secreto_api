@@ -58,7 +58,12 @@ class UserGroupController {
         where: {
           user_id: req.userId,
         },
-        include: "friend",
+        include: [
+          {
+            model: AmGrupo.scope("withoutFriend"),
+            as: "grupo"
+          },
+        ],
       });
       return res.json(user_grupo);
     } catch (err) {
@@ -74,6 +79,7 @@ class UserGroupController {
         where: {
           grupo_id: req.params.grupo_id,
         },
+        include: "friend",
       });
       return res.json(user_grupo);
     } catch (err) {
