@@ -15,6 +15,12 @@ module.exports = {
         allowNull: false,
 
       },
+      chave: {
+        type: Sequelize.STRING(50), 
+        allowNull: false,
+        unique: true
+
+      },
       drawn_at: {
         type: Sequelize.DATE,
         allowNull: true,
