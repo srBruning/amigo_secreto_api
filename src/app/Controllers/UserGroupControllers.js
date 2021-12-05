@@ -114,11 +114,16 @@ class UserGroupController {
 
   async draw(req, res) {
     try {
-      let list = await UserGrupo.findAll({
-        where: {
-          grupo_id: req.params.grupo_id,
-        },
+      const grupo = await AmGrupo.findByPk(req.params.grupo_id, {
+        include: [{ model: UserGrupo, as: "usersGrupo" }],
       });
+      if (!grupo) {
+        res.status(404).send({ message: "Nenhum grupo encontrado" });
+      }
+      if(grupo.id_dono != req.userId){
+        res.status(400).send({ message: "Somente o administador do grupo pode gerar o sorteio" });
+      }
+      let list = grupo.usersGrupo;
 
       for (let index = 0; index < list.length; index++) {
         const userGrup = list[index];
@@ -133,7 +138,6 @@ class UserGroupController {
         aux = userGrup;
         await userGrup.save();
       }
-      const grupo = await AmGrupo.findByPk(req.params.grupo_id);
       grupo.drawn_at = Date.now();
       await grupo.save();
       return res.json(list);

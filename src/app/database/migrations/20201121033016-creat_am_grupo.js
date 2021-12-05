@@ -10,6 +10,15 @@ module.exports = {
         primaryKey: true
 
       },
+      id_dono: {
+        type: Sequelize.INTEGER, 
+        allowNull: false, 
+        references: {
+          model: 'users',  
+          key: 'id' 
+        },
+
+      },
       name: {
         type: Sequelize.STRING(50), 
         allowNull: false,

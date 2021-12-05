@@ -23,6 +23,7 @@ class GroupController {
        
         try{ 
             req.body.chave= makeKey(6);
+            req.body.id_dono = req.userId;
             const groupo = await AmGrupo.create(req.body);
             
             let user_grup = { grupo_id: groupo.id, user_id: req.userId };

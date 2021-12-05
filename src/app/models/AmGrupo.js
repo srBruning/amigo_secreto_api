@@ -3,6 +3,11 @@ const Sequelize = require('sequelize');
 class AmGrupo extends Sequelize.Model {
     static init(sequelize){
         super.init({
+            id_dono: {
+                type: Sequelize.INTEGER,
+                allowNull: false
+            },
+
             name: {
                 type: Sequelize.STRING,
                 allowNull: false,
