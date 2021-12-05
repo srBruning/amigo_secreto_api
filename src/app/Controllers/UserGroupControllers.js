@@ -83,7 +83,9 @@ class UserGroupController {
           "friend",
           {
             model: AmGrupo,
-            as: "grupo",
+            as: "grupo",include:[{
+                model: UserGrupo.scope('withoutFriend'), as: "membros"
+            } ]
           },
         ],
       });
