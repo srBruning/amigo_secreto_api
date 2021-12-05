@@ -60,7 +60,7 @@ class UserGroupController {
         },
         include: [
           {
-            model: AmGrupo.scope("withoutFriend"),
+            model: AmGrupo,
             as: "grupo"
           },
         ],
