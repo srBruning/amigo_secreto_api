@@ -66,6 +66,9 @@ class UserGroupController {
           },
         ],
       });
+      if(user_grupo && req.userId== user_grupo.grupo.id_dono){
+        user_grupo.is_dono = true;
+      }
       return res.json(user_grupo);
     } catch (err) {
       res
