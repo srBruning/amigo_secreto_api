@@ -66,9 +66,7 @@ class UserGroupController {
           },
         ],
       });
-      if(user_grupo && req.userId== user_grupo.grupo.id_dono){
-        user_grupo.is_dono = true;
-      }
+
       return res.json(user_grupo);
     } catch (err) {
       res
@@ -107,6 +105,11 @@ class UserGroupController {
       if (user_grupo == undefined || user_grupo.length == 0) {
         return null;
       }
+     
+      if( req.userId== user_grupo[0].grupo.id_dono){
+        user_grupo[0].is_dono = true;
+      }
+
       return res.json(user_grupo[0]);
     } catch (err) {
       res
