@@ -77,7 +77,7 @@ class UserGroupController {
 
   async byGrupId(req, res) {
     try {
-      const user_grupo = await UserGrupo.scope("withoutFriend").findAll({
+      const user_grupo = await UserGrupo.findAll({
         where: {
           grupo_id: req.params.grupo_id,
           user_id: req.userId
@@ -106,10 +106,11 @@ class UserGroupController {
       if (user_grupo == undefined || user_grupo.length == 0) {
         return null;
       }
-      user_grupo[0].meu_id = req.userId;
-      user_grupo[0].is_dono = true;
-      if( req.userId== user_grupo[0].grupo.id_dono){
-        user_grupo[0].is_dono = true;
+      const ret = user_grupo[0];
+      ret['meu_id' = req.userId;
+      ret['is_dono'] = false;
+      if( req.userId== ret.grupo.id_dono){
+        ret['is_dono'] = true;
       }
 
       return res.json(user_grupo[0]);
