@@ -102,14 +102,13 @@ class UserGroupController {
             ],
           },
         ],
-      });
+     });
       if (user_grupo == undefined || user_grupo.length == 0) {
         return null;
       }
-      const ret = {
-        ...user_grupo[0],
-        ...{ meu_id: req.userId, is_dono: (req.userId == user_grupo[0].id_dono) }
-      };
+	const lst = user_grupo.map((node) => node.get({ plain: true }));
+      const ret =lst[0];
+      ret.is_dono= (req.userId ==ret.grupo.id_dono);
 
       return res.json(ret);
     } catch (err) {
