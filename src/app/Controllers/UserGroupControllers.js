@@ -107,7 +107,7 @@ class UserGroupController {
         return null;
       }
       const ret = user_grupo[0];
-      ret['meu_id' = req.userId;
+      ret['meu_id'] = req.userId;
       ret['is_dono'] = false;
       if( req.userId== ret.grupo.id_dono){
         ret['is_dono'] = true;
