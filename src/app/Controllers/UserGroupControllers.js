@@ -108,7 +108,7 @@ class UserGroupController {
       }
       const ret = {
         ...user_grupo[0],
-        ...{ meu_id: req.userId, is_dono: req.userId == user_grupo[0].id_dono },
+        ...{ meu_id: req.userId, is_dono: (req.userId == user_grupo[0].id_dono) }
       };
 
       return res.json(ret);
