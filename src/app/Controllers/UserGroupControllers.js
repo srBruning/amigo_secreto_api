@@ -80,7 +80,7 @@ class UserGroupController {
       const user_grupo = await UserGrupo.findAll({
         where: {
           grupo_id: req.params.grupo_id,
-          user_id: req.userId
+          user_id: req.userId,
         },
         include: [
           "friend",
@@ -106,14 +106,12 @@ class UserGroupController {
       if (user_grupo == undefined || user_grupo.length == 0) {
         return null;
       }
-      const ret = user_grupo[0];
-      ret['meu_id'] = req.userId;
-      ret['is_dono'] = false;
-      if( req.userId== ret.grupo.id_dono){
-        ret['is_dono'] = true;
-      }
+      const ret = {
+        ...user_grupo[0],
+        ...{ meu_id: eq.userId, is_dono: req.userId == user_grupo[0].id_dono },
+      };
 
-      return res.json(user_grupo[0]);
+      return res.json(ret);
     } catch (err) {
       res
         .status(500)
@@ -129,8 +127,12 @@ class UserGroupController {
       if (!grupo) {
         res.status(404).send({ message: "Nenhum grupo encontrado" });
       }
-      if(grupo.id_dono != req.userId){
-        res.status(400).send({ message: "Somente o administador do grupo pode gerar o sorteio" });
+      if (grupo.id_dono != req.userId) {
+        res
+          .status(400)
+          .send({
+            message: "Somente o administador do grupo pode gerar o sorteio",
+          });
       }
       let list = grupo.usersGrupo;
 
