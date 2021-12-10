@@ -80,6 +80,7 @@ class UserGroupController {
       const user_grupo = await UserGrupo.scope("withoutFriend").findAll({
         where: {
           grupo_id: req.params.grupo_id,
+          user_id: req.userId
         },
         include: [
           "friend",
@@ -105,7 +106,8 @@ class UserGroupController {
       if (user_grupo == undefined || user_grupo.length == 0) {
         return null;
       }
-     
+      user_grupo[0].meu_id = req.userId;
+      user_grupo[0].is_dono = true;
       if( req.userId== user_grupo[0].grupo.id_dono){
         user_grupo[0].is_dono = true;
       }
