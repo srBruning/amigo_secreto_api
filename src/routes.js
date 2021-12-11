@@ -30,6 +30,7 @@ routes.post('/api/user/avatar', verifyJWT, multer(multerConfig).single('file'), 
 });
 
 routes.post('/api/user', UserControllers.store);
+routes.post('/api/user/:id', UserControllers.update);
 routes.post('/api/singin',  UserControllers.login);
 routes.get('/api/users',verifyJWT,  UserControllers.index);
 routes.get('/api/users/show', verifyJWT,  UserControllers.show);
