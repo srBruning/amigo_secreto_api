@@ -83,7 +83,7 @@ class UserGroupController {
           user_id: req.userId,
         },
         include: [
-          "friend",
+          { model: User.scope("withoutPassword"), as: "friend",  include: { model: AppPicture, as: "picture_avatar" } },
           {
             model: AmGrupo,
             as: "grupo",
