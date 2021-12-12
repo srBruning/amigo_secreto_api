@@ -62,7 +62,7 @@ class UserController {
       const user = await User.findByPk(req.userId);
       if (user == null) return res.status(404);
 
-      user.set(_user);
+      user.update(_user);
 
       user.save();
       user.password = undefined;
